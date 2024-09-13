@@ -10,6 +10,8 @@
 // component imports
 import HabitForm from "~/components/HabitForm.vue";
 import HabitList from "~/components/HabitList.vue";
+
+const habitStore = useHabitStore();
 </script>
 
 <style>
