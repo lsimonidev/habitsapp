@@ -8,7 +8,9 @@
       >
         <div class="flex items-center justify-between mb-4">
           <p class="text-purple-500 font-bold">{{ habit.name }}</p>
-          <button class="text-gray-800">Delete</button>
+          <button class="text-gray-800" @click="deleteHabit(habit.id)">
+            Delete
+          </button>
         </div>
 
         <div class="flex items-center">
@@ -28,4 +30,10 @@
 const props = defineProps({
   habits: Array,
 });
+
+const habitStore = useHabitStore();
+
+const deleteHabit = async (id) => {
+  await habitStore.deleteHabit(id);
+};
 </script>

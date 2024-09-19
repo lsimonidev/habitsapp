@@ -1,5 +1,11 @@
 import { defineStore } from "pinia";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 
 export const useHabitStore = defineStore("habitStore", {
   state: () => ({
@@ -26,6 +32,14 @@ export const useHabitStore = defineStore("habitStore", {
     },
     //updating habits
     //deleting habits
+    async deleteHabit(id) {
+      const { $db } = useNuxtApp();
+
+      const docRef = doc($db, "habits", id);
+      await deleteDoc(docRef);
+
+      this.habits = this.habits.filter((habit) => habit.id !== id);
+    },
     //completing a daily habit
     // calculate habit streak
   },
