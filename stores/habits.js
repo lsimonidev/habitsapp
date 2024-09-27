@@ -7,6 +7,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
+import { format } from "date-fns";
 
 export const useHabitStore = defineStore("habitStore", {
   state: () => ({
@@ -53,7 +54,20 @@ export const useHabitStore = defineStore("habitStore", {
 
       this.habits = this.habits.filter((habit) => habit.id !== id);
     },
+
     //completing a daily habit
+    async toggleCompletion(habit) {
+      const today = format(new Date(), "yyyy-MM-dd");
+
+      if (habit.completions.includes(today)) {
+        habit.completions = habit.completions.filter((date) => date !== today);
+      } else {
+        habit.completions.push(today);
+      }
+
+      await this.updateHabit(habit.id, { completions: habit.completions });
+    },
+
     // calculate habit streak
   },
 });
