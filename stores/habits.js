@@ -7,7 +7,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 
 export const useHabitStore = defineStore("habitStore", {
   state: () => ({
@@ -64,10 +64,32 @@ export const useHabitStore = defineStore("habitStore", {
       } else {
         habit.completions.push(today);
       }
+      habit.streak = this.calcStreak(habit.completions);
+      console.log("banana", habit.streak);
 
-      await this.updateHabit(habit.id, { completions: habit.completions });
+      await this.updateHabit(habit.id, {
+        completions: habit.completions,
+        streak: habit.streak,
+      });
     },
 
     // calculate habit streak
+    calcStreak(completions) {
+      const sortedDates = completions.sort((a, b) => new Date(b) - new Date(a));
+      let streak = 0;
+      let currentDate = new Date();
+      for (const date of sortedDates) {
+        console.log(streak);
+        const diff = differenceInDays(currentDate, new Date(date));
+
+        if (diff > 1) {
+          break;
+        }
+
+        streak += 1;
+        currentDate = new Date(date);
+      }
+      return streak;
+    },
   },
 });
